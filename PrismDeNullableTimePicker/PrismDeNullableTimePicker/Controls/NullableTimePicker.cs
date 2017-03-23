@@ -95,8 +95,7 @@ namespace PrismDeNullableTimePicker.Controls
                 HorizontalTextAlignment = TextAlignment.Start,
                 //VerticalTextAlignment = TextAlignment.Center,
                 TextColor = Color.Black,
-                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label)),
-                InputTransparent = true
+                FontSize = Device.GetNamedSize(NamedSize.Medium, typeof(Label))
             };
 
             _timePicker = new TimePicker
@@ -110,10 +109,10 @@ namespace PrismDeNullableTimePicker.Controls
             Content = new StackLayout
             {
                 Children =
-              {
+                {
                    _entry,
                    _timePicker
-              },
+                },
                 Padding = 0,
                 Spacing = 0,
                 Margin = 0
@@ -122,10 +121,7 @@ namespace PrismDeNullableTimePicker.Controls
             Padding = 0;
             Margin = 0;
 
-            var tapGestureRecognizer = new TapGestureRecognizer();
-            tapGestureRecognizer.Tapped += TapGestureRecognizer_Tapped;
-            tapGestureRecognizer.NumberOfTapsRequired = 1;
-            GestureRecognizers.Add(tapGestureRecognizer);
+            _entry.Focused += OnFocused;
 
             _timePicker.PropertyChanged += timePicker_PropertyChanged;
 
@@ -148,17 +144,16 @@ namespace PrismDeNullableTimePicker.Controls
             }
         }
 
-        async private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        async private void OnFocused(object sender, EventArgs e)
         {
             if (IsEnabled == false)
             {
                 return;
             }
 
-            if (_timePicker.IsFocused)
-            {
-                _timePicker.Unfocus();
-            }
+            Device.BeginInvokeOnMainThread(() => {
+                _entry.Unfocus();
+            });
 
             if (this.Command != null)
             {
